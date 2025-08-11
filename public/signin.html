@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Signin</title>
+</head>
+<body>
+    <h2>Signin</h2>
+
+    <!-- Sign-in Form -->
+    <form id="signinForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+    </form>
+
+    <p id="result"></p>
+
+    <!-- Button to test /me route -->
+    <button onclick="getMyInfo()">Get My Info</button>
+
+    <script>
+        // Handle sign in form submit
+        document.getElementById("signinForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const res = await fetch("/signin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            document.getElementById("result").innerText = data.message;
+
+            if (res.ok && data.message) {
+                localStorage.setItem("token", data.message); // Save token
+                alert("Signed in successfully!");
+            }
+        });
+
+        // Test /me route
+        async function getMyInfo() {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                alert("No token found. Please sign in first.");
+                return;
+            }
+
+            const res = await fetch("/me", {
+                method: "GET",
+                headers: { "Authorization": token }
+            });
+
+            const data = await res.json();
+            console.log(data);
+            alert(JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
