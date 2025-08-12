@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Signup / Signin</title>
+</head>
+<body>
+    <h2>Signup</h2>
+    <input id="signup-username" placeholder="Username" />
+    <input id="signup-password" type="password" placeholder="Password" />
+    <button onclick="signup()">Signup</button>
+    <p id="signup-result"></p>
+
+    <h2>Signin</h2>
+    <input id="signin-username" placeholder="Username" />
+    <input id="signin-password" type="password" placeholder="Password" />
+    <button onclick="signin()">Signin</button>
+    <p id="signin-result"></p>
+
+    <script>
+        async function signup() {
+            const username = document.getElementById("signup-username").value;
+            const password = document.getElementById("signup-password").value;
+
+            try {
+                const res = await fetch("/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password }),
+                });
+                const data = await res.json();
+                document.getElementById("signup-result").innerText = data.message;
+            } catch (err) {
+                document.getElementById("signup-result").innerText = "Error: " + err.message;
+            }
+        }
+
+        async function signin() {
+            const username = document.getElementById("signin-username").value;
+            const password = document.getElementById("signin-password").value;
+
+            try {
+                const res = await fetch("/signin", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password }),
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.setItem("token", data.message);
+                    document.getElementById("signin-result").innerText = "Signed in! Token saved.";
+                } else {
+                    document.getElementById("signin-result").innerText = data.message || "Signin failed.";
+                }
+            } catch (err) {
+                document.getElementById("signin-result").innerText = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>

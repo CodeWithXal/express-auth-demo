@@ -111,19 +111,24 @@ function my_info(req, res){
 }
 
 
-// Serve signup page
-app.get("/signup", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "signup.html"));
-});
+// // Serve signup page
+// app.get("/signup", (req, res) => {
+//     res.sendFile(path.join(__dirname, "public", "signup.html"));
+// });
 
-// Serve signin page
-app.get("/signin", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "signin.html"));
-});
+// // Serve signin page
+// app.get("/signin", (req, res) => {
+//     res.sendFile(path.join(__dirname, "public", "signin.html"));
+// });
 
-// Serve me page
-app.get("/me", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "me.html"));
+// // Serve me page
+// app.get("/me", (req, res) => {
+//     res.sendFile(path.join(__dirname, "public", "me.html"));
+// });
+
+// serves auth
+app.get("/auth", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "auth.html"));
 });
 
 
@@ -131,6 +136,8 @@ app.get("/me", (req, res) => {
 app.post("/signin", signin_handler);
 app.post("/signup", signup_handler);
 app.get("/me", my_info);
+
+
 
 
 
