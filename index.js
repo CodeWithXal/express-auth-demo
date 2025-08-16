@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "randomsourav";
+const JWT_SECRET = "";  // don't share this
 const path = require("path");
 
 app.use(express.json());
