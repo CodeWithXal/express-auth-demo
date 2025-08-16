@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "randomsourav";
 const path = require("path");
 
 app.use(express.json());
@@ -65,13 +67,16 @@ function signin_handler(req, res){
     })
 
     if(user){
-        const token = generateToken(32);
-        user.token = token;
+        const token = jwt.sign({
+            username: username
+        }, JWT_SECRET); // converts the username to jwt
+
+        // user.token = token;   DON'T NEED TO STORE IT IN DB
 
         console.log(users);  //logs username and password with token
 
         res.json({
-            message : token
+            token : token
         });
     }
 
@@ -85,9 +90,13 @@ function signin_handler(req, res){
 
 
 function my_info(req, res){
-    const token = req.get("Authorization");
+    const token = req.get("Authorization"); // sends jwt
+    const decodedInformtion = jwt.verify(token, JWT_SECRET); // CONVERTS JWT TO USERNAME
+    const username = decodedInformtion.username;
+
+    
     const user = users.find(function(u){
-        if(u.token === token){
+        if(u.username === username){
             return true;
 
         }
@@ -126,10 +135,10 @@ function my_info(req, res){
 //     res.sendFile(path.join(__dirname, "public", "me.html"));
 // });
 
-// serves auth
-app.get("/auth", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "auth.html"));
-});
+// // serves auth
+// app.get("/auth", (req, res) => {
+//     res.sendFile(path.join(__dirname, "public", "auth.html"));
+// });
 
 
 
